@@ -9,3 +9,11 @@
   --color-second-blue: #296377;
   --color-primary: #4A8394;
 }
+
+.react-datepicker-wrapper {
+  width: 100% !important;
+}
+
+.react-datepicker__input-container {
+  width: 100% !important;
+}

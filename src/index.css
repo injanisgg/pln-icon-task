@@ -4,3 +4,8 @@
   font-family: 'Open Sans', sans-serif;
   background-color: #FEFEFE;
 }
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  opacity: 0;
+  display: none;
+}
