@@ -3,31 +3,65 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { id } from "date-fns/locale";
 import { calculateConsumption } from "../utils/calculateConsumption";
+import { getUnits, getRooms, getJenisKonsumsi } from "../api/bookingApi";
 
 export default function FormBooking() {
+  // state api
+  const [unitMaster, setUnitMaster] = useState([]);
+  const [roomMaster, setRoomMaster] = useState([]);
+  const [consumptionMaster, setConsumptionMaster] = useState([]);
+
+  // state user
   const [unit, setUnit] = useState("");
   const [room, setRoom] = useState("");
   const [capacity, setCapacity] = useState(0);
   const [date, setDate] = useState(null);
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
-  const [participants, setParticipants] = useState(0);
+  const [participants, setParticipants] = useState("");
   const [consumptions, setConsumptions] = useState([]);
   const [totalCost, setTotalCost] = useState(0);
   const [errors, setErrors] = useState({});
+  const [showPopUp, setShowPopUp] = useState(false);
+
+  // fetch master data
+  useEffect(() => {
+    const fetchMasterData = async () => {
+      try {
+        const unitsMasterData = await getUnits();
+        const roomsMasterData = await getRooms();
+        const konsumMasterData = await getJenisKonsumsi();
+
+        setUnitMaster(unitsMasterData);
+        setRoomMaster(roomsMasterData);
+        setConsumptionMaster(konsumMasterData);
+      } catch (error) {
+        console.log('error fetch data')
+      }
+    }
+
+    fetchMasterData();
+  }, [])
 
   // Auto hitung konsumsi
   useEffect(() => {
-    const { items, total } = calculateConsumption(startTime, endTime, participants);
-    setConsumptions(items);
-    setTotalCost(total);
-  }, [startTime, endTime, participants]);
+  const { items, total } = calculateConsumption(startTime, endTime, participants, consumptionMaster);
+  setConsumptions(items);
+  setTotalCost(total);
+}, [startTime, endTime, participants, consumptionMaster]);
 
+  // select unit
+  const handleSelectUnit = (e) => {
+    setUnit(e.target.value);
+    setRoom("");
+    setCapacity(0);
+  };
+
+  // select room
   const handleSelectRoom = (e) => {
+    const selectedRoom = roomMaster.find((r) => r.id === e.target.value);
     setRoom(e.target.value);
-    if (e.target.value === "Ruang Prambanan") setCapacity(50);
-    else if (e.target.value === "Ruang Borobudur") setCapacity(30);
-    else setCapacity(0);
+    setCapacity(selectedRoom ? selectedRoom.capacity : 0);
   };
 
   const validateForm = () => {
@@ -57,8 +91,16 @@ export default function FormBooking() {
     return Object.keys(newErrors).length === 0; // valid kalau ga ada error
   };
 
+  // handlesubmit
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    const parsedParticipants = Number(participants);
+    if (isNaN(parsedParticipants) || parsedParticipants <= 0) {
+      // handle error
+      return;
+    }
+
     if (!validateForm()) return;
 
     const bookingData = {
@@ -68,18 +110,12 @@ export default function FormBooking() {
         date: date?.toISOString(),
         startTime,
         endTime,
-        participants,
+        participants: parsedParticipants,
         consumptions,
         totalCost,
     };
 
-    // simpan ke localStorage
-    const existing = JSON.parse(localStorage.getItem("bookings")) || [];
-    existing.push(bookingData);
-    localStorage.setItem("bookings", JSON.stringify(existing));
-
-    alert("Booking berhasil disimpan 🚀");
-    window.location.href = "/";
+    setShowPopUp(true);
   };
 
 
@@ -95,12 +131,13 @@ export default function FormBooking() {
         <label className="block mb-1 text-sm font-medium">Unit</label>
         <select
           value={unit}
-          onChange={(e) => setUnit(e.target.value)}
+          onChange={handleSelectUnit}
           className="w-full border border-gray-200 rounded-lg p-2 pr-8 text-sm appearance-none"
         >
           <option value="">Pilih Unit</option>
-          <option value="UID JAYA">UID JAYA</option>
-          <option value="UID KALTIM">UID KALTIM</option>
+          {unitMaster.map((u) => (
+            <option key={u.id} value={u.id}>{u.officeName}</option>
+          ))}
         </select>
         {errors.unit && <p className="text-red-500 text-xs">{errors.unit}</p>}
         <span className="absolute right-3 top-8 pointer-events-none text-primary">
@@ -115,10 +152,14 @@ export default function FormBooking() {
           value={room}
           onChange={handleSelectRoom}
           className="w-full border border-gray-200 rounded-lg p-2 pr-8 text-sm appearance-none"
+          disabled={!unit}
         >
           <option value="">Pilih Ruang Meeting</option>
-          <option value="Ruang Prambanan">Ruang Prambanan</option>
-          <option value="Ruang Borobudur">Ruang Borobudur</option>
+          {roomMaster.filter((r) => r.officeId === unit).map((r) => (
+              <option key={r.id} value={r.id}>
+                {r.roomName}
+              </option>
+            ))}
         </select>
         {errors.room && <p className="text-red-500 text-xs">{errors.room}</p>}
         <span className="absolute right-3 top-8 pointer-events-none text-primary">
@@ -164,7 +205,7 @@ export default function FormBooking() {
           onChange={(e) => setStartTime(e.target.value)}
           className="w-full border border-gray-200 rounded-lg p-2 text-sm appearance-none"
         >
-          <option value="">Pilih Jam Mulai</option>
+          <option value="">Pilih Waktu Mulai</option>
           <option value="09:00">09:00</option>
           <option value="10:00">10:00</option>
           <option value="11:00">11:00</option>
@@ -186,7 +227,7 @@ export default function FormBooking() {
           onChange={(e) => setEndTime(e.target.value)}
           className="w-full border border-gray-200 rounded-lg p-2 text-sm appearance-none"
         >
-          <option value="">Pilih Jam Selesai</option>
+          <option value="">Pilih Waktu Selesai</option>
           <option value="10:00">10:00</option>
           <option value="11:00">11:00</option>
           <option value="12:00">12:00</option>
@@ -207,7 +248,8 @@ export default function FormBooking() {
         <input
           type="number"
           value={participants}
-          onChange={(e) => setParticipants(Number(e.target.value))}
+          onChange={(e) => setParticipants(e.target.value)}
+          placeholder="Masukan Jumlah Peserta"
           className="w-full border border-gray-200 rounded-lg p-2 text-sm"
         />
         {errors.participants && (
@@ -256,6 +298,22 @@ export default function FormBooking() {
         >
           Simpan
         </button>
+        {showPopUp && (
+        <div className="fixed inset-0 flex items-center justify-center bg-transparent">
+          <div className="bg-white p-6 rounded-lg shadow-xl border border-gray-50 text-center">
+            <h2 className="text-xl font-semibold mb-4">Booking berhasil disimpan</h2>
+            <button
+              onClick={() => {
+                setShowPopUp(false);
+                window.location.reload();
+              }}
+              className="px-4 py-2 bg-green-500 text-white rounded"
+            >
+              OK
+            </button>
+          </div>
+        </div>
+      )}
       </div>
     </form>
   );

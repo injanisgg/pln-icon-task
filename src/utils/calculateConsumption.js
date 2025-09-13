@@ -1,34 +1,45 @@
-export function calculateConsumption(startTime, endTime, participants) {
-  if (!startTime || !endTime || participants <= 0) return { items: [], total: 0 };
+export function calculateConsumption(startTime, endTime, participants, consumptionsMaster) {
+  if (!startTime || !endTime || participants <= 0 || consumptionsMaster.length === 0) {
+    return { items: [], total: 0 };
+  }
 
-  const prices = {
-    "Snack Siang": 20000,
-    "Makan Siang": 50000,
-    "Snack Sore": 20000,
-  };
-
-  const items = [];
-
-  // convert ke menit biar gampang bandingin
-  const toMinutes = (time) => {
-    const [h, m] = time.split(":").map(Number);
+  const toMinutes = (t) => {
+    const [h, m] = t.split(":").map(Number);
     return h * 60 + m;
   };
 
   const start = toMinutes(startTime);
   const end = toMinutes(endTime);
 
-  // Snack Siang (10:00–11:30)
-  if (start <= 630 && end >= 600) items.push("Snack Siang"); // 600 = 10:00, 630 = 10:30
+  let items = [];
+  let total = 0;
 
-  // Makan Siang (12:00–13:00)
-  if (start <= 780 && end >= 720) items.push("Makan Siang"); // 720 = 12:00, 780 = 13:00
+  // Snack Siang (09:00 - 11:00)
+  if (start <= toMinutes("09:00") && end >= toMinutes("11:00")) {
+    const snack = consumptionsMaster.find((c) => c.name === "Snack Siang");
+    if (snack) {
+      items.push(snack.name);
+      total += participants * snack.maxPrice;
+    }
+  }
 
-  // Snack Sore (15:00–16:30)
-  if (start <= 990 && end >= 900) items.push("Snack Sore"); // 900 = 15:00, 990 = 16:30
+  // Makan Siang (11:00 - 13:00)
+  if (start < toMinutes("13:00") && end >= toMinutes("12:00")) {
+    const lunch = consumptionsMaster.find((c) => c.name === "Makan Siang");
+    if (lunch) {
+      items.push(lunch.name);
+      total += participants * lunch.maxPrice;
+    }
+  }
 
-  // Hitung total
-  const total = items.reduce((acc, item) => acc + prices[item] * participants, 0);
+  // Snack Sore (15:00 - 16:00)
+  if (start <= toMinutes("15:00") && end >= toMinutes("16:00")) {
+    const snackSore = consumptionsMaster.find((c) => c.name === "Snack Sore");
+    if (snackSore) {
+      items.push(snackSore.name);
+      total += participants * snackSore.maxPrice;
+    }
+  }
 
   return { items, total };
 }
