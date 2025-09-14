@@ -26,7 +26,7 @@ export default function DashboardCard({ room, officeName }) {
   );
 
   return (
-    <div className="p-4 rounded-lg shadow-sm bg-[#F2F2F2] w-80">
+    <div className="p-4 rounded-lg shadow-sm bg-[#F2F2F2] w-full">
       <h3 className="text-sm text-gray-600">{room.roomName}</h3>
 
       {/* Donut chart persentase */}

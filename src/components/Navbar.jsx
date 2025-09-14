@@ -21,7 +21,9 @@ export default function Navbar({ onOpen }) {
       : <header className='bg-gradient-to-r from-first-blue to-second-blue p-3 text-white'>
           <div className="flex justify-between">
             <span className='flex items-center gap-3'>
-                <button onClick={onOpen} className="fa-solid fa-bars fa-lg"></button>
+                <button onClick={onOpen} className="block md:hidden">
+                  <i className="fa-solid fa-bars fa-lg"></i>
+                </button>
                 <img src={PLN_LOGO} alt="PLN LOGO" className='w-10' />
                 <h2 className='font-bold'>iMeeting</h2>
             </span>

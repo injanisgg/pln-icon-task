@@ -52,12 +52,12 @@ export default function DashboardPage() {
         {summary.map((unit, index) => (
           <div key={index}>
             {/* Unit Title */}
-            <h2 className="text-lg font-bold text-gray-500 mb-4 flex justify-center items-center gap-2">
+            <h2 className="text-lg font-bold text-gray-500 mb-4 flex justify-center md:justify-start items-center gap-2">
               <img src={Bolt} alt="bold" className="w-12" /> {unit.officeName}
             </h2>
 
             {/* Cards Grid */}
-            <div className="grid grid-cols-1 place-items-center sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 place-items-center md:grid-cols-3 lg:grid-cols-4 gap-4">
               {unit.detailSummary.map((room, idxRoom) => (
                 <DashboardCard
                   key={idxRoom}

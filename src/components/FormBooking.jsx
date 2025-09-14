@@ -24,6 +24,9 @@ export default function FormBooking() {
   const [errors, setErrors] = useState({});
   const [showPopUp, setShowPopUp] = useState(false);
 
+  // cek apakah semua field sudah diisi
+  const isFormValid = unit && room && capacity && date && startTime && endTime && participants && consumptions && totalCost;
+
   // fetch master data
   useEffect(() => {
     const fetchMasterData = async () => {
@@ -88,33 +91,14 @@ export default function FormBooking() {
     }
 
     setErrors(newErrors);
-    return Object.keys(newErrors).length === 0; // valid kalau ga ada error
+    return Object.keys(newErrors).length === 0;
   };
 
   // handlesubmit
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const parsedParticipants = Number(participants);
-    if (isNaN(parsedParticipants) || parsedParticipants <= 0) {
-      // handle error
-      return;
-    }
-
     if (!validateForm()) return;
-
-    const bookingData = {
-        unit,
-        room,
-        capacity,
-        date: date?.toISOString(),
-        startTime,
-        endTime,
-        participants: parsedParticipants,
-        consumptions,
-        totalCost,
-    };
-
     setShowPopUp(true);
   };
 
@@ -288,13 +272,15 @@ export default function FormBooking() {
         <button
           type="button"
           onClick={() => window.location.reload()}
-          className="px-4 py-2 border rounded-lg text-red-600"
+          className="px-4 py-2 hover:border hover:rounded-lg text-red-600 font-semibold"
         >
           Batal
         </button>
         <button
           type="submit"
-          className="px-4 py-2 bg-blue-600 text-white rounded-lg"
+          disabled={!isFormValid}
+          className={`px-4 py-2 font-semibold rounded-lg
+            ${isFormValid ? 'bg-primary text-white' : 'bg-gray-300 text-gray-500 cursor-not-allowed' }`}
         >
           Simpan
         </button>

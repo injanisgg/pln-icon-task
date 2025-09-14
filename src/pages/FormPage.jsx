@@ -2,11 +2,16 @@ import React, { useState } from 'react'
 import FormBooking from '../components/FormBooking'
 
 function FormPage() {
-  const [showFrom, setShowForm] = useState(false);
+  const [showForm, setShowForm] = useState(false);
 
   const handleButtonForm = () => {
-    setShowForm(prev => !prev)
-  }
+    setShowForm(true);
+  };
+
+  // dipanggil saat form submit atau batal
+  const handleCloseForm = () => {
+    setShowForm(false);
+  };
 
   return (
     <div className='p-3'>
@@ -14,16 +19,30 @@ function FormPage() {
       <div className="flex justify-between">
         <span>
           <h1 className='text-xl font-semibold'>Ruang Meeting</h1>
-          <p className='text-primary text-sm'>Ruang Meeting</p>
+          <span className='flex gap-1 items-center'>
+            <p className={`text-sm ${showForm ? 'text-gray-400' : 'text-primary'}`}>Ruang Meeting</p>
+            {showForm &&
+              <>
+                <i className='fa-solid fa-chevron-right fa-sm text-primary'></i>
+                <p className='text-sm text-primary'>Pesan Ruangan</p>
+              </>
+            }
+          </span>
         </span>
-        <button onClick={handleButtonForm} className={`flex items-center gap-2 text-white ${showFrom ? 'bg-red-600' : 'bg-primary'} p-2 rounded-md text-sm`}>
-          {showFrom ? <i className="fa-solid fa-xmark"></i> : <i className="fa-solid fa-plus"></i>}
-          {showFrom ? 'Tutup Form' : 'Pesan Ruangan'}
-        </button>
+
+        {!showForm && (
+          <button
+            onClick={handleButtonForm}
+            className='flex items-center gap-2 text-white bg-primary p-2 rounded-md text-sm'
+          >
+            <i className="fa-solid fa-plus"></i>
+            Pesan Ruangan
+          </button>
+        )}
       </div>
 
       {/* Form */}
-      {showFrom && <FormBooking />}
+      {showForm && <FormBooking onClose={handleCloseForm} />}
     </div>
   )
 }
