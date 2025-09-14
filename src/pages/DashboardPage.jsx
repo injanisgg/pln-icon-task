@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { getDashboardSummary } from "../api/bookingApi";
 import DashboardCard from "../components/DashboardCard";
+import Bolt from '../assets/bolt-circle.png'
 
 export default function DashboardPage() {
   const [summary, setSummary] = useState([]);
@@ -30,34 +31,33 @@ export default function DashboardPage() {
 
   return (
     <div className="p-6">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold flex items-center gap-2">
-          <span>⚙️</span> DASHBOARD
-        </h1>
-
-        {/* Dropdown Periode */}
+      {/* Dropdown Periode */}
+      <div className="flex flex-col mb-5 relative">
+        <label className="text-gray-500 mb-2">Periode</label>
         <select
           value={selectedPeriod}
           onChange={(e) => setSelectedPeriod(e.target.value)}
-          className="border rounded px-3 py-1"
+          className="font-semibold border border-[#00A3E9] bg-blue-100 rounded-lg px-3 py-2 appearance-none"
         >
           <option value="Jan-2024">Januari 2024</option>
           <option value="Feb-2024">Februari 2024</option>
         </select>
+        <span className="absolute right-3 top-10 pointer-events-none text-[#00A3E9]">
+            <i className="fa-solid fa-caret-down fa-lg"></i>
+        </span>
       </div>
 
       {/* Content */}
       <div className="space-y-8">
-        {summary.map((unit, idx) => (
-          <div key={idx}>
+        {summary.map((unit, index) => (
+          <div key={index}>
             {/* Unit Title */}
-            <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
-              <span>🏢</span> {unit.officeName}
+            <h2 className="text-lg font-bold text-gray-500 mb-4 flex justify-center items-center gap-2">
+              <img src={Bolt} alt="bold" className="w-12" /> {unit.officeName}
             </h2>
 
             {/* Cards Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 place-items-center sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
               {unit.detailSummary.map((room, idxRoom) => (
                 <DashboardCard
                   key={idxRoom}

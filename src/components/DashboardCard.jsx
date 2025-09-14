@@ -5,7 +5,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-const COLORS = ["#0088FE", "#E5E7EB"]; // biru + abu2 background
+const COLORS = ["#00A3E9", "#E5E7EB"];
 
 export default function DashboardCard({ room, officeName }) {
   // Hitung persentase pemakaian ruang (averageOccupancyPerMonth / capacity)
@@ -26,9 +26,8 @@ export default function DashboardCard({ room, officeName }) {
   );
 
   return (
-    <div className="p-4 border rounded shadow-sm bg-white w-64">
-      <h3 className="text-lg font-bold">{room.roomName}</h3>
-      <p className="text-sm text-gray-600 mb-2">Office: {officeName}</p>
+    <div className="p-4 rounded-lg shadow-sm bg-[#F2F2F2] w-80">
+      <h3 className="text-sm text-gray-600">{room.roomName}</h3>
 
       {/* Donut chart persentase */}
       <div className="flex items-center justify-between">
@@ -62,29 +61,29 @@ export default function DashboardCard({ room, officeName }) {
 
       {/* Nominal konsumsi */}
       <p className="text-sm mt-2">Nominal Konsumsi</p>
-      <p className="text-base font-bold text-blue-600">
+      <p className="text-xl font-bold text-black">
         Rp {totalPrice.toLocaleString("id-ID")}
       </p>
 
       {/* Breakdown konsumsi */}
       <div className="mt-3 space-y-2">
         {room.totalConsumption.map((item, index) => (
-          <div key={index}>
-            <div className="flex justify-between text-sm">
-              <span>{item.name}</span>
-              <span>{item.totalPackage}</span>
-            </div>
-            <div className="w-full bg-gray-200 h-2 rounded">
-              <div
-                className="bg-blue-500 h-2 rounded"
-                style={{
-                  width: `${
-                    (Number(item.totalPackage) /
-                      Math.max(...room.totalConsumption.map((c) => Number(c.totalPackage)))) *
-                    100
-                  }%`,
-                }}
-              ></div>
+          <div key={index} className="flex gap-2 items-center">
+            <span className="w-full">{item.name}</span>              
+            <div className="flex flex-col w-full">
+                <span>{item.totalPackage}</span>
+                <div className="bg-gray-200 h-2 rounded">
+                <div
+                    className="bg-[#00A3E9] h-2 rounded"
+                    style={{
+                    width: `${
+                        (Number(item.totalPackage) /
+                        Math.max(...room.totalConsumption.map((c) => Number(c.totalPackage)))) *
+                        50
+                    }%`,
+                    }}
+                ></div>
+                </div>
             </div>
           </div>
         ))}
