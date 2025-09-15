@@ -333,17 +333,17 @@ export default function FormBooking() {
         <button
           type="button"
           onClick={() => window.location.reload()}
-          className="px-4 py-2 hover:border hover:rounded-lg text-red-600 font-semibold"
+          className="px-4 py-2 hover:border hover:rounded-lg hover:cursor-pointer text-red-600 font-semibold"
         >
           Batal
         </button>
         <button
           type="submit"
           disabled={!isFormValid}
-          className={`px-4 py-2 font-semibold rounded-lg
+          className={`px-4 py-2 font-semibold rounded-lg hover:cursor-pointer
             ${
               isFormValid
-                ? "bg-primary text-white"
+                ? "bg-primary hover:bg-first-blue text-white"
                 : "bg-gray-300 text-gray-500 cursor-not-allowed"
             }`}
         >
@@ -360,7 +360,7 @@ export default function FormBooking() {
                   setShowPopUp(false);
                   window.location.reload();
                 }}
-                className="px-4 py-2 bg-primary text-white rounded"
+                className="px-4 py-2 bg-primary text-white rounded hover:cursor-pointer"
               >
                 OK
               </button>

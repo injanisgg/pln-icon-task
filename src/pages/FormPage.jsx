@@ -25,7 +25,7 @@ function FormPage({ setShowComplainBtn }) {
       <div className="flex justify-between mr-5">
         <span className='flex gap-2 items-center'>
             {showForm && 
-              <button onClick={handleBack} className='bg-primary rounded-lg px-2 py-1 hover:cursor-pointer'>
+              <button onClick={handleBack} className='bg-primary hover:bg-first-blue rounded-lg px-2 py-1 hover:cursor-pointer'>
                 <i className='fa-solid fa-chevron-left fa-xs text-white'></i>
               </button>
             }
@@ -48,7 +48,7 @@ function FormPage({ setShowComplainBtn }) {
         {!showForm && (
           <button
             onClick={handleButtonForm}
-            className='flex items-center gap-2 text-white bg-primary p-2 rounded-md text-sm hover:cursor-pointer'
+            className='flex items-center gap-2 text-white bg-primary hover:bg-first-blue p-2 rounded-md text-sm hover:cursor-pointer'
           >
             <i className="fa-solid fa-plus"></i>
             Pesan Ruangan

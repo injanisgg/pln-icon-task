@@ -28,7 +28,7 @@ export default function Navbar({ onOpen , showComplainBtn}) {
                 <h2 className='font-bold'>iMeeting</h2>
             </span>
             <span className='flex gap-2 md:gap-5 items-center mr-0 md:mr-5'>
-              <span className='bg-gray-50/20 rounded-lg p-2 flex gap-2 items-center hover:cursor-pointer'>
+              <span className='bg-gray-50/20 rounded-lg p-2 flex gap-2 items-center hover:cursor-pointer hover:border hover:border-white'>
                 <i className="fa-solid fa-bullhorn"></i>
                 <p className='hidden md:block'>Kontak Aduan</p>
               </span>
