@@ -75,8 +75,8 @@ function SideBar({ isOpen, onClose }) {
             <li>
               <NavLink to="/" end className="block">
                 {({ isActive }) => (
-                  <div className="flex items-center w-full mx-12 my-4 transition-all duration-200 justify-center group-hover:justify-start group-hover:mx-6">
-                    <div className={`flex items-center justify-center py-5 px-3 rounded-lg transition-colors duration-200
+                  <div className="flex items-center w-full mx-12 my-4 transition-all justify-center group-hover:justify-start group-hover:mx-6">
+                    <div className={`flex items-center justify-center py-5 px-3 rounded-lg transition-colors
                                      ${isActive ? "bg-primary text-white" : "text-primary"}`}>
                       <i className="fa-regular fa-house fa-lg" />
                     </div>
@@ -93,8 +93,8 @@ function SideBar({ isOpen, onClose }) {
             <li>
               <NavLink to="/form" className="block">
                 {({ isActive }) => (
-                  <div className="flex items-center w-full mx-6 my-4 transition-all duration-200 justify-center group-hover:justify-start">
-                    <div className={`flex items-center justify-center py-5 px-3 rounded-lg transition-colors duration-200
+                  <div className="flex items-center w-full mx-6 my-4 transition-all justify-center group-hover:justify-start">
+                    <div className={`flex items-center justify-center py-5 px-3 rounded-lg transition-colors 
                                      ${isActive ? "bg-primary text-white" : "text-primary"}`}>
                       <i className="fa-regular fa-file fa-lg" />
                     </div>

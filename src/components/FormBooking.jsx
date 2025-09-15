@@ -297,7 +297,7 @@ export default function FormBooking() {
                 setShowPopUp(false);
                 window.location.reload();
               }}
-              className="px-4 py-2 bg-green-500 text-white rounded"
+              className="px-4 py-2 bg-primary text-white rounded"
             >
               OK
             </button>
