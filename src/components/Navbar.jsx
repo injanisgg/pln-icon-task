@@ -12,7 +12,7 @@ export default function Navbar({ onOpen }) {
   return (
     <>
     {isHome
-      ? <div className='flex justify-between border-b border-gray-200 shadow-b p-5 fixed top-0 left-0 right-0 z-40 bg-white'>
+      ? <div className='flex justify-between border-b border-gray-200 shadow-b p-4 fixed top-0 left-0 right-0 z-40 bg-white'>
           <h1 className="text-2xl font-bold flex items-center gap-2">
             <img src={Gear} alt="Gear Icon" className="w-10" /> DASHBOARD
           </h1>

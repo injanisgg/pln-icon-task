@@ -154,7 +154,7 @@ export default function FormBooking() {
       </div>
 
       {/* Kapasitas */}
-      <div className="mb-6">
+      <div className="pb-6 border-b border-gray-200">
         <label className="block mb-1 text-sm font-medium">Kapasitas</label>
         <input
           type="number"
@@ -164,7 +164,7 @@ export default function FormBooking() {
         />
       </div>
 
-      <h2 className="font-semibold mb-3">Informasi Rapat</h2>
+      <h2 className="font-semibold my-3">Informasi Rapat</h2>
 
       <div className="flex flex-col lg:flex-row gap-5">
         {/* Tanggal */}
@@ -256,7 +256,7 @@ export default function FormBooking() {
       </div>
 
       {/* Nominal Konsumsi */}
-      <div className="mb-6">
+      <div className="pb-6 border-b border-gray-200">
         <label className="block text-sm font-medium mb-1">Nominal Konsumsi</label>
         <div className="flex rounded-lg border border-gray-300 overflow-hidden w-[20.4rem] lg:w-72">
           <span className="bg-gray-100 px-3 flex items-center text-gray-700 text-sm">
@@ -272,7 +272,7 @@ export default function FormBooking() {
       </div>
 
       {/* Buttons */}
-      <div className="flex justify-end gap-4">
+      <div className="flex justify-end gap-4 pr-3 mt-3">
         <button
           type="button"
           onClick={() => window.location.reload()}

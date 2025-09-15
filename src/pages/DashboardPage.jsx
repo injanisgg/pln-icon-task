@@ -48,7 +48,7 @@ export default function DashboardPage() {
       </div>
 
       {/* Content */}
-      <div className="space-y-8">
+      <div className="space-y-8 md:grid md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 md:gap-3">
         {summary.map((unit, index) => (
           <div key={index}>
             {/* Unit Title */}
@@ -57,7 +57,7 @@ export default function DashboardPage() {
             </h2>
 
             {/* Cards Grid */}
-            <div className="grid grid-cols-1 place-items-center md:grid-cols-3 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 place-items-center gap-5 md:gap-3">
               {unit.detailSummary.map((room, index) => (
                 <DashboardCard
                   key={index}
