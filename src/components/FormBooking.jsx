@@ -23,9 +23,32 @@ export default function FormBooking() {
   const [totalCost, setTotalCost] = useState(0);
   const [errors, setErrors] = useState({});
   const [showPopUp, setShowPopUp] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
 
   // cek apakah semua field sudah diisi
-  const isFormValid = unit && room && capacity && date && startTime && endTime && participants && consumptions && totalCost;
+  const isFormValid =
+    unit &&
+    room &&
+    capacity &&
+    date &&
+    startTime &&
+    endTime &&
+    participants &&
+    consumptions &&
+    totalCost;
+
+  const timeData = [
+    {value: '08:00', time: '08:00'},
+    {value: '09:00', time: '09:00'},
+    {value: '10:00', time: '10:00'},
+    {value: '11:00', time: '11:00'},
+    {value: '12:00', time: '12:00'},
+    {value: '13:00', time: '13:00'},
+    {value: '14:00', time: '14:00'},
+    {value: '15:00', time: '15:00'},
+    {value: '16:00', time: '16:00'},
+    {value: '17:00', time: '17:00'},
+  ];
 
   // fetch master data
   useEffect(() => {
@@ -39,19 +62,53 @@ export default function FormBooking() {
         setRoomMaster(roomsMasterData);
         setConsumptionMaster(konsumMasterData);
       } catch (error) {
-        console.log('error fetch data')
+        console.log("error fetch data");
       }
-    }
+    };
 
     fetchMasterData();
-  }, [])
+  }, []);
 
   // Auto hitung konsumsi
   useEffect(() => {
-  const { items, total } = calculateConsumption(startTime, endTime, participants, consumptionMaster);
-  setConsumptions(items);
-  setTotalCost(total);
-}, [startTime, endTime, participants, consumptionMaster]);
+    const { items, total } = calculateConsumption(
+      startTime,
+      endTime,
+      participants,
+      consumptionMaster
+    );
+    setConsumptions(items);
+    setTotalCost(total);
+  }, [startTime, endTime, participants, consumptionMaster]);
+
+  // helper waktu → menit
+  const toMinutes = (t) => {
+    const [h, m] = t.split(":").map(Number);
+    return h * 60 + m;
+  };
+
+  // validasi realtime waktu & peserta
+  useEffect(() => {
+    setErrors((prev) => {
+      const updated = { ...prev };
+
+      // Validasi jam
+      if (startTime && endTime && toMinutes(endTime) <= toMinutes(startTime)) {
+        updated.time = "Jam selesai harus lebih besar dari jam mulai";
+      } else {
+        delete updated.time;
+      }
+
+      // Validasi peserta
+      if (participants && participants > capacity) {
+        updated.participants = "Jumlah peserta melebihi kapasitas ruangan";
+      } else {
+        delete updated.participants;
+      }
+
+      return updated;
+    });
+  }, [startTime, endTime, participants, capacity]);
 
   // select unit
   const handleSelectUnit = (e) => {
@@ -67,8 +124,12 @@ export default function FormBooking() {
     setCapacity(selectedRoom ? selectedRoom.capacity : 0);
   };
 
-  const validateForm = () => {
-    const newErrors = {};
+  // submit handler
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setSubmitted(true);
+
+    const newErrors = { ...errors };
 
     if (!unit) newErrors.unit = "Unit wajib dipilih";
     if (!room) newErrors.room = "Ruang meeting wajib dipilih";
@@ -76,32 +137,12 @@ export default function FormBooking() {
     if (!startTime) newErrors.startTime = "Waktu mulai wajib diisi";
     if (!endTime) newErrors.endTime = "Waktu selesai wajib diisi";
 
-    // Jam selesai > jam mulai
-    const toMinutes = (t) => {
-      const [h, m] = t.split(":").map(Number);
-      return h * 60 + m;
-    };
-    if (startTime && endTime && toMinutes(endTime) <= toMinutes(startTime)) {
-      newErrors.time = "Jam selesai harus lebih besar dari jam mulai";
-    }
-
-    // Peserta tidak boleh > kapasitas
-    if (participants > capacity) {
-      newErrors.participants = "Jumlah peserta melebihi kapasitas ruangan";
-    }
-
     setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+
+    if (Object.keys(newErrors).length === 0) {
+      setShowPopUp(true);
+    }
   };
-
-  // handlesubmit
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    if (!validateForm()) return;
-    setShowPopUp(true);
-  };
-
 
   return (
     <form
@@ -117,16 +158,22 @@ export default function FormBooking() {
           <select
             value={unit}
             onChange={handleSelectUnit}
-            className="w-[20.4rem] lg:w-72 border border-gray-200 rounded-lg p-2 pr-8 text-sm appearance-none"
+            className={`w-[20.4rem] lg:w-72 border rounded-lg p-2 pr-8 text-sm appearance-none ${
+              submitted && errors.unit ? "border-red-500" : "border-gray-200"
+            }`}
           >
             <option value="">Pilih Unit</option>
             {unitMaster.map((u) => (
-              <option key={u.id} value={u.id}>{u.officeName}</option>
+              <option key={u.id} value={u.id}>
+                {u.officeName}
+              </option>
             ))}
           </select>
-          {errors.unit && <p className="text-red-500 text-xs">{errors.unit}</p>}
+          {submitted && errors.unit && (
+            <p className="text-red-500 text-xs">{errors.unit}</p>
+          )}
           <span className="absolute right-3 sm:right-4 top-8 pointer-events-none text-primary">
-              <i className="fa-solid fa-chevron-down"></i>
+            <i className="fa-solid fa-chevron-down"></i>
           </span>
         </div>
 
@@ -136,19 +183,25 @@ export default function FormBooking() {
           <select
             value={room}
             onChange={handleSelectRoom}
-            className="w-[20.4rem] lg:w-72 border border-gray-200 rounded-lg p-2 pr-8 text-sm appearance-none"
+            className={`w-[20.4rem] lg:w-72 border rounded-lg p-2 pr-8 text-sm appearance-none ${
+              submitted && errors.room ? "border-red-500" : "border-gray-200"
+            }`}
             disabled={!unit}
           >
             <option value="">Pilih Ruang Meeting</option>
-            {roomMaster.filter((r) => r.officeId === unit).map((r) => (
+            {roomMaster
+              .filter((r) => r.officeId === unit)
+              .map((r) => (
                 <option key={r.id} value={r.id}>
                   {r.roomName}
                 </option>
               ))}
           </select>
-          {errors.room && <p className="text-red-500 text-xs">{errors.room}</p>}
+          {submitted && errors.room && (
+            <p className="text-red-500 text-xs">{errors.room}</p>
+          )}
           <span className="absolute right-3 sm:right-4 top-8 pointer-events-none text-primary">
-              <i className="fa-solid fa-chevron-down"></i>
+            <i className="fa-solid fa-chevron-down"></i>
           </span>
         </div>
       </div>
@@ -176,11 +229,15 @@ export default function FormBooking() {
             dateFormat="dd MMMM yyyy"
             locale={id}
             placeholderText="Pilih tanggal"
-            className="w-[20.4rem] lg:w-72 border border-gray-200 rounded-lg p-2 text-sm pl-10"
+            className={`w-[20.4rem] lg:w-72 border rounded-lg p-2 text-sm pl-10 ${
+              submitted && errors.date ? "border-red-500" : "border-gray-200"
+            }`}
           />
-          {errors.date && <p className="text-red-500 text-xs">{errors.date}</p>}
+          {submitted && errors.date && (
+            <p className="text-red-500 text-xs">{errors.date}</p>
+          )}
           <span className="absolute left-3 top-8 pointer-events-none text-primary">
-              <i className="fa-regular fa-calendar"></i>
+            <i className="fa-regular fa-calendar"></i>
           </span>
         </div>
 
@@ -190,19 +247,18 @@ export default function FormBooking() {
           <select
             value={startTime}
             onChange={(e) => setStartTime(e.target.value)}
-            className="w-[20.4rem] lg:w-72 border border-gray-200 rounded-lg p-2 text-sm appearance-none"
+            className={`w-[20.4rem] lg:w-72 border rounded-lg p-2 text-sm appearance-none ${
+              errors.startTime ? "border-red-500" : "border-gray-200"
+            }`}
           >
             <option value="">Pilih Waktu Mulai</option>
-            <option value="09:00">09:00</option>
-            <option value="10:00">10:00</option>
-            <option value="11:00">11:00</option>
-            <option value="12:00">12:00</option>
-            <option value="13:00">13:00</option>
-            <option value="15:00">15:00</option>
+            {timeData.slice(0, -1).map((t) => (
+              <option key={t.value} value={t.value}>{t.time}</option>
+            ))}
           </select>
-          {errors.startTime && <p className="text-red-500 text-xs">{errors.startTime}</p>}
+          {errors.startTime && (<p className="text-red-500 text-xs">{errors.startTime}</p>)}
           <span className="absolute right-3 sm:right-4 top-8 pointer-events-none text-primary">
-              <i className="fa-solid fa-chevron-down"></i>
+            <i className="fa-solid fa-chevron-down"></i>
           </span>
         </div>
 
@@ -212,22 +268,21 @@ export default function FormBooking() {
           <select
             value={endTime}
             onChange={(e) => setEndTime(e.target.value)}
-            className="w-[20.4rem] lg:w-72 border border-gray-200 rounded-lg p-2 text-sm appearance-none"
+            className={`w-[20.4rem] lg:w-72 border rounded-lg p-2 text-sm appearance-none ${
+              errors.endTime ? "border-red-500" : "border-gray-200"
+            }`}
           >
             <option value="">Pilih Waktu Selesai</option>
-            <option value="10:00">10:00</option>
-            <option value="11:00">11:00</option>
-            <option value="12:00">12:00</option>
-            <option value="13:00">13:00</option>
-            <option value="14:00">14:00</option>
-            <option value="16:00">16:00</option>
+            {timeData.slice(1).map((t) => (
+              <option key={t.value} value={t.value}>{t.time}</option>
+            ))}
           </select>
-          {errors.endTime && <p className="text-red-500 text-xs">{errors.endTime}</p>}
+          {errors.endTime && (<p className="text-red-500 text-xs">{errors.endTime}</p>)}
+          {errors.time && <p className="text-red-500 text-xs">{errors.time}</p>}
           <span className="absolute right-3 sm:right-4 top-8 pointer-events-none text-primary">
-              <i className="fa-solid fa-chevron-down"></i>
+            <i className="fa-solid fa-chevron-down"></i>
           </span>
         </div>
-        {errors.time && <p className="text-red-500 text-xs">{errors.time}</p>}
       </div>
 
       {/* Jumlah Peserta */}
@@ -238,7 +293,9 @@ export default function FormBooking() {
           value={participants}
           onChange={(e) => setParticipants(e.target.value)}
           placeholder="Masukan Jumlah Peserta"
-          className="w-[20.4rem] lg:w-72 border border-gray-200 rounded-lg p-2 text-sm"
+          className={`w-[20.4rem] lg:w-72 border rounded-lg p-2 text-sm ${
+            errors.participants ? "border-red-500" : "border-gray-200"
+          }`}
         />
         {errors.participants && (
           <p className="text-red-500 text-xs">{errors.participants}</p>
@@ -284,26 +341,32 @@ export default function FormBooking() {
           type="submit"
           disabled={!isFormValid}
           className={`px-4 py-2 font-semibold rounded-lg
-            ${isFormValid ? 'bg-primary text-white' : 'bg-gray-300 text-gray-500 cursor-not-allowed' }`}
+            ${
+              isFormValid
+                ? "bg-primary text-white"
+                : "bg-gray-300 text-gray-500 cursor-not-allowed"
+            }`}
         >
           Simpan
         </button>
         {showPopUp && (
-        <div className="fixed inset-0 flex items-center justify-center bg-transparent">
-          <div className="bg-white p-6 rounded-lg shadow-xl border border-gray-50 text-center">
-            <h2 className="text-xl font-semibold mb-4">Booking berhasil disimpan</h2>
-            <button
-              onClick={() => {
-                setShowPopUp(false);
-                window.location.reload();
-              }}
-              className="px-4 py-2 bg-primary text-white rounded"
-            >
-              OK
-            </button>
+          <div className="fixed inset-0 flex items-center justify-center bg-transparent">
+            <div className="bg-white p-6 rounded-lg shadow-xl border border-gray-50 text-center">
+              <h2 className="text-xl font-semibold mb-4">
+                Booking berhasil disimpan
+              </h2>
+              <button
+                onClick={() => {
+                  setShowPopUp(false);
+                  window.location.reload();
+                }}
+                className="px-4 py-2 bg-primary text-white rounded"
+              >
+                OK
+              </button>
+            </div>
           </div>
-        </div>
-      )}
+        )}
       </div>
     </form>
   );

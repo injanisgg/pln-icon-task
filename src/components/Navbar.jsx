@@ -4,7 +4,7 @@ import ProfilePicture from '../assets/profile.png'
 import { useLocation } from 'react-router-dom'
 import Gear from '../assets/gear.png';
 
-export default function Navbar({ onOpen }) {
+export default function Navbar({ onOpen , showComplainBtn}) {
   const location = useLocation();
 
   const isHome = location.pathname === '/'
@@ -27,9 +27,17 @@ export default function Navbar({ onOpen }) {
                 <img src={PLN_LOGO} alt="PLN LOGO" className='w-10' />
                 <h2 className='font-bold'>iMeeting</h2>
             </span>
-            <span className='flex gap-2 items-center'>
-                <i className="fa-regular fa-bell fa-lg"></i>
-                <img src={ProfilePicture} alt="Profile Picture" className='size-10 rounded-full'/>
+            <span className='flex gap-2 md:gap-5 items-center mr-0 md:mr-5'>
+              <span className='bg-gray-50/20 rounded-lg p-2 flex gap-2 items-center hover:cursor-pointer'>
+                <i className="fa-solid fa-bullhorn"></i>
+                <p className='hidden md:block'>Kontak Aduan</p>
+              </span>
+                <i className="fa-regular fa-bell fa-lg hover:cursor-pointer"></i>
+                <span className='flex gap-1 items-center'>
+                  <img src={ProfilePicture} alt="Profile Picture" className='size-10 rounded-full'/>
+                  <p className='text-xs md:text-base'>John Doe</p>
+                  <i className='fa-solid fa-chevron-down fa-sm hover:cursor-pointer'></i>
+                </span>
             </span>
           </div>
         </header>

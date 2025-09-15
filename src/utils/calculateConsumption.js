@@ -14,8 +14,8 @@ export function calculateConsumption(startTime, endTime, participants, consumpti
   let items = [];
   let total = 0;
 
-  // Snack Siang (09:00 - 11:00)
-  if (start <= toMinutes("09:00") && end >= toMinutes("11:00")) {
+  // Snack Siang: meeting mulai sebelum jam 11:00
+  if (start < toMinutes("11:00")) {
     const snack = consumptionsMaster.find((c) => c.name === "Snack Siang");
     if (snack) {
       items.push(snack.name);
@@ -23,8 +23,8 @@ export function calculateConsumption(startTime, endTime, participants, consumpti
     }
   }
 
-  // Makan Siang (11:00 - 13:00)
-  if (start < toMinutes("13:00") && end >= toMinutes("12:00")) {
+  // Makan Siang: meeting overlap dengan 11:00 - 14:00
+  if (start < toMinutes("14:00") && end > toMinutes("11:00")) {
     const lunch = consumptionsMaster.find((c) => c.name === "Makan Siang");
     if (lunch) {
       items.push(lunch.name);
@@ -32,8 +32,8 @@ export function calculateConsumption(startTime, endTime, participants, consumpti
     }
   }
 
-  // Snack Sore (15:00 - 16:00)
-  if (start <= toMinutes("15:00") && end >= toMinutes("16:00")) {
+  // Snack Sore: meeting mulai setelah jam 14:00
+  if (start >= toMinutes("14:00")) {
     const snackSore = consumptionsMaster.find((c) => c.name === "Snack Sore");
     if (snackSore) {
       items.push(snackSore.name);
