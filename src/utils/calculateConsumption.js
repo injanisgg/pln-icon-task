@@ -33,7 +33,7 @@ export function calculateConsumption(startTime, endTime, participants, consumpti
   }
 
   // Snack Sore: meeting mulai setelah jam 14:00
-  if (start >= toMinutes("14:00")) {
+  if (start >= toMinutes("14:00") && end <= toMinutes("17:00")) {
     const snackSore = consumptionsMaster.find((c) => c.name === "Snack Sore");
     if (snackSore) {
       items.push(snackSore.name);
