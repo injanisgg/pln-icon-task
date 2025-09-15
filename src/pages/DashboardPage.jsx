@@ -26,23 +26,23 @@ export default function DashboardPage() {
   }, [selectedPeriod]);
 
   if (loading) {
-    return <p className="p-4">Loading...</p>;
+    return <p className="p-4 text-center">Loading...</p>;
   }
 
   return (
-    <div className="p-6">
+    <div className="p-6 mt-20 lg:ml-16">
       {/* Dropdown Periode */}
       <div className="flex flex-col mb-5 relative">
         <label className="text-gray-500 mb-2">Periode</label>
         <select
           value={selectedPeriod}
           onChange={(e) => setSelectedPeriod(e.target.value)}
-          className="font-semibold border border-[#00A3E9] bg-blue-100 rounded-lg px-3 py-2 appearance-none"
+          className="font-semibold border border-[#00A3E9] bg-blue-100 rounded-lg px-3 py-2 w-full md:w-58 appearance-none"
         >
           <option value="Jan-2024">Januari 2024</option>
           <option value="Feb-2024">Februari 2024</option>
         </select>
-        <span className="absolute right-3 top-10 pointer-events-none text-[#00A3E9]">
+        <span className="absolute right-3 md:left-50 top-10 pointer-events-none text-[#00A3E9]">
             <i className="fa-solid fa-caret-down fa-lg"></i>
         </span>
       </div>
@@ -58,9 +58,9 @@ export default function DashboardPage() {
 
             {/* Cards Grid */}
             <div className="grid grid-cols-1 place-items-center md:grid-cols-3 lg:grid-cols-4 gap-4">
-              {unit.detailSummary.map((room, idxRoom) => (
+              {unit.detailSummary.map((room, index) => (
                 <DashboardCard
-                  key={idxRoom}
+                  key={index}
                   room={room}
                   officeName={unit.officeName}
                 />

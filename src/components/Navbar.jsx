@@ -12,16 +12,16 @@ export default function Navbar({ onOpen }) {
   return (
     <>
     {isHome
-      ? <div className='flex justify-between border-b border-gray-200 shadow-b p-5'>
-        <h1 className="text-2xl font-bold flex items-center gap-2">
-          <img src={Gear} alt="Gear Icon" className="w-10" /> DASHBOARD
-        </h1>
-        <button onClick={onOpen} className="fa-solid fa-xl fa-chevron-right"></button>
-      </div>
-      : <header className='bg-gradient-to-r from-first-blue to-second-blue p-3 text-white'>
+      ? <div className='flex justify-between border-b border-gray-200 shadow-b p-5 fixed top-0 left-0 right-0 z-40 bg-white'>
+          <h1 className="text-2xl font-bold flex items-center gap-2">
+            <img src={Gear} alt="Gear Icon" className="w-10" /> DASHBOARD
+          </h1>
+          <button onClick={onOpen} className="fa-solid fa-xl fa-chevron-right"></button>
+        </div>
+      : <header className='fixed bg-gradient-to-r from-first-blue to-second-blue p-3 text-white z-40 top-0 left-0 right-0'>
           <div className="flex justify-between">
             <span className='flex items-center gap-3'>
-                <button onClick={onOpen} className="block md:hidden">
+                <button onClick={onOpen} className="block lg:hidden">
                   <i className="fa-solid fa-bars fa-lg"></i>
                 </button>
                 <img src={PLN_LOGO} alt="PLN LOGO" className='w-10' />

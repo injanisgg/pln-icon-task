@@ -106,49 +106,51 @@ export default function FormBooking() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="mt-10 bg-white p-3 rounded-xl border border-gray-100 shadow max-w-2xl mx-auto"
+      className="mt-10 bg-white p-3 rounded-xl border border-gray-100 shadow w-full lg:mr-3 xl:mr-20 justify-items-center lg:justify-items-normal"
     >
       <h2 className="font-semibold mb-3">Informasi Ruang Meeting</h2>
 
-      {/* Unit */}
-      <div className="mb-4 relative">
-        <label className="block mb-1 text-sm font-medium">Unit</label>
-        <select
-          value={unit}
-          onChange={handleSelectUnit}
-          className="w-full border border-gray-200 rounded-lg p-2 pr-8 text-sm appearance-none"
-        >
-          <option value="">Pilih Unit</option>
-          {unitMaster.map((u) => (
-            <option key={u.id} value={u.id}>{u.officeName}</option>
-          ))}
-        </select>
-        {errors.unit && <p className="text-red-500 text-xs">{errors.unit}</p>}
-        <span className="absolute right-3 top-8 pointer-events-none text-primary">
-            <i className="fa-solid fa-chevron-down"></i>
-        </span>
-      </div>
-
-      {/* Ruang Meeting */}
-      <div className="mb-4 relative">
-        <label className="block mb-1 text-sm font-medium">Ruang Meeting</label>
-        <select
-          value={room}
-          onChange={handleSelectRoom}
-          className="w-full border border-gray-200 rounded-lg p-2 pr-8 text-sm appearance-none"
-          disabled={!unit}
-        >
-          <option value="">Pilih Ruang Meeting</option>
-          {roomMaster.filter((r) => r.officeId === unit).map((r) => (
-              <option key={r.id} value={r.id}>
-                {r.roomName}
-              </option>
+      <div className="flex flex-col lg:flex-row gap-5">
+        {/* Unit */}
+        <div className="mb-4 relative">
+          <label className="block mb-1 text-sm font-medium">Unit</label>
+          <select
+            value={unit}
+            onChange={handleSelectUnit}
+            className="w-[20.4rem] lg:w-72 border border-gray-200 rounded-lg p-2 pr-8 text-sm appearance-none"
+          >
+            <option value="">Pilih Unit</option>
+            {unitMaster.map((u) => (
+              <option key={u.id} value={u.id}>{u.officeName}</option>
             ))}
-        </select>
-        {errors.room && <p className="text-red-500 text-xs">{errors.room}</p>}
-        <span className="absolute right-3 top-8 pointer-events-none text-primary">
-            <i className="fa-solid fa-chevron-down"></i>
-        </span>
+          </select>
+          {errors.unit && <p className="text-red-500 text-xs">{errors.unit}</p>}
+          <span className="absolute right-3 sm:right-4 top-8 pointer-events-none text-primary">
+              <i className="fa-solid fa-chevron-down"></i>
+          </span>
+        </div>
+
+        {/* Ruang Meeting */}
+        <div className="mb-4 relative">
+          <label className="block mb-1 text-sm font-medium">Ruang Meeting</label>
+          <select
+            value={room}
+            onChange={handleSelectRoom}
+            className="w-[20.4rem] lg:w-72 border border-gray-200 rounded-lg p-2 pr-8 text-sm appearance-none"
+            disabled={!unit}
+          >
+            <option value="">Pilih Ruang Meeting</option>
+            {roomMaster.filter((r) => r.officeId === unit).map((r) => (
+                <option key={r.id} value={r.id}>
+                  {r.roomName}
+                </option>
+              ))}
+          </select>
+          {errors.room && <p className="text-red-500 text-xs">{errors.room}</p>}
+          <span className="absolute right-3 sm:right-4 top-8 pointer-events-none text-primary">
+              <i className="fa-solid fa-chevron-down"></i>
+          </span>
+        </div>
       </div>
 
       {/* Kapasitas */}
@@ -158,73 +160,75 @@ export default function FormBooking() {
           type="number"
           value={capacity}
           readOnly
-          className="w-full rounded-lg p-2 bg-gray-100"
+          className="w-[20.4rem] lg:w-72 rounded-lg p-2 bg-gray-100"
         />
       </div>
 
       <h2 className="font-semibold mb-3">Informasi Rapat</h2>
 
-      {/* Tanggal */}
-      <div className="mb-4 relative">
-        <label className="block mb-1 text-sm font-medium">Tanggal</label>
-        <DatePicker
-          selected={date}
-          onChange={(d) => setDate(d)}
-          dateFormat="dd MMMM yyyy"
-          locale={id}
-          placeholderText="Pilih tanggal"
-          className="w-full border border-gray-200 rounded-lg p-2 text-sm pl-10"
-        />
-        {errors.date && <p className="text-red-500 text-xs">{errors.date}</p>}
-        <span className="absolute left-3 top-8 pointer-events-none text-primary">
-            <i className="fa-regular fa-calendar"></i>
-        </span>
-      </div>
+      <div className="flex flex-col lg:flex-row gap-5">
+        {/* Tanggal */}
+        <div className="mb-4 relative">
+          <label className="block mb-1 text-sm font-medium">Tanggal</label>
+          <DatePicker
+            selected={date}
+            onChange={(d) => setDate(d)}
+            dateFormat="dd MMMM yyyy"
+            locale={id}
+            placeholderText="Pilih tanggal"
+            className="w-[20.4rem] lg:w-72 border border-gray-200 rounded-lg p-2 text-sm pl-10"
+          />
+          {errors.date && <p className="text-red-500 text-xs">{errors.date}</p>}
+          <span className="absolute left-3 top-8 pointer-events-none text-primary">
+              <i className="fa-regular fa-calendar"></i>
+          </span>
+        </div>
 
-      {/* Waktu Mulai */}
-      <div className="mb-4 relative">
-        <label className="block text-sm font-medium mb-1">Waktu Mulai</label>
-        <select
-          value={startTime}
-          onChange={(e) => setStartTime(e.target.value)}
-          className="w-full border border-gray-200 rounded-lg p-2 text-sm appearance-none"
-        >
-          <option value="">Pilih Waktu Mulai</option>
-          <option value="09:00">09:00</option>
-          <option value="10:00">10:00</option>
-          <option value="11:00">11:00</option>
-          <option value="12:00">12:00</option>
-          <option value="13:00">13:00</option>
-          <option value="15:00">15:00</option>
-        </select>
-        {errors.startTime && <p className="text-red-500 text-xs">{errors.startTime}</p>}
-        <span className="absolute right-3 top-8 pointer-events-none text-primary">
-            <i className="fa-solid fa-chevron-down"></i>
-        </span>
-      </div>
+        {/* Waktu Mulai */}
+        <div className="mb-4 relative">
+          <label className="block text-sm font-medium mb-1">Waktu Mulai</label>
+          <select
+            value={startTime}
+            onChange={(e) => setStartTime(e.target.value)}
+            className="w-[20.4rem] lg:w-72 border border-gray-200 rounded-lg p-2 text-sm appearance-none"
+          >
+            <option value="">Pilih Waktu Mulai</option>
+            <option value="09:00">09:00</option>
+            <option value="10:00">10:00</option>
+            <option value="11:00">11:00</option>
+            <option value="12:00">12:00</option>
+            <option value="13:00">13:00</option>
+            <option value="15:00">15:00</option>
+          </select>
+          {errors.startTime && <p className="text-red-500 text-xs">{errors.startTime}</p>}
+          <span className="absolute right-3 sm:right-4 top-8 pointer-events-none text-primary">
+              <i className="fa-solid fa-chevron-down"></i>
+          </span>
+        </div>
 
-      {/* Waktu Selesai */}
-      <div className="mb-4 relative">
-        <label className="block text-sm font-medium mb-1">Waktu Selesai</label>
-        <select
-          value={endTime}
-          onChange={(e) => setEndTime(e.target.value)}
-          className="w-full border border-gray-200 rounded-lg p-2 text-sm appearance-none"
-        >
-          <option value="">Pilih Waktu Selesai</option>
-          <option value="10:00">10:00</option>
-          <option value="11:00">11:00</option>
-          <option value="12:00">12:00</option>
-          <option value="13:00">13:00</option>
-          <option value="14:00">14:00</option>
-          <option value="16:00">16:00</option>
-        </select>
-        {errors.endTime && <p className="text-red-500 text-xs">{errors.endTime}</p>}
-        <span className="absolute right-3 top-8 pointer-events-none text-primary">
-            <i className="fa-solid fa-chevron-down"></i>
-        </span>
+        {/* Waktu Selesai */}
+        <div className="mb-4 relative">
+          <label className="block text-sm font-medium mb-1">Waktu Selesai</label>
+          <select
+            value={endTime}
+            onChange={(e) => setEndTime(e.target.value)}
+            className="w-[20.4rem] lg:w-72 border border-gray-200 rounded-lg p-2 text-sm appearance-none"
+          >
+            <option value="">Pilih Waktu Selesai</option>
+            <option value="10:00">10:00</option>
+            <option value="11:00">11:00</option>
+            <option value="12:00">12:00</option>
+            <option value="13:00">13:00</option>
+            <option value="14:00">14:00</option>
+            <option value="16:00">16:00</option>
+          </select>
+          {errors.endTime && <p className="text-red-500 text-xs">{errors.endTime}</p>}
+          <span className="absolute right-3 sm:right-4 top-8 pointer-events-none text-primary">
+              <i className="fa-solid fa-chevron-down"></i>
+          </span>
+        </div>
+        {errors.time && <p className="text-red-500 text-xs">{errors.time}</p>}
       </div>
-      {errors.time && <p className="text-red-500 text-xs">{errors.time}</p>}
 
       {/* Jumlah Peserta */}
       <div className="mb-4">
@@ -234,7 +238,7 @@ export default function FormBooking() {
           value={participants}
           onChange={(e) => setParticipants(e.target.value)}
           placeholder="Masukan Jumlah Peserta"
-          className="w-full border border-gray-200 rounded-lg p-2 text-sm"
+          className="w-[20.4rem] lg:w-72 border border-gray-200 rounded-lg p-2 text-sm"
         />
         {errors.participants && (
           <p className="text-red-500 text-xs">{errors.participants}</p>
@@ -242,7 +246,7 @@ export default function FormBooking() {
       </div>
 
       {/* Jenis Konsumsi */}
-      <div className="mb-4">
+      <div className="mb-4 w-[20.4rem] lg:w-72">
         <label className="block text-sm font-medium mb-1">Jenis Konsumsi</label>
         <div className="text-sm space-y-1">
           {consumptions.length > 0
@@ -254,7 +258,7 @@ export default function FormBooking() {
       {/* Nominal Konsumsi */}
       <div className="mb-6">
         <label className="block text-sm font-medium mb-1">Nominal Konsumsi</label>
-        <div className="flex rounded-lg border border-gray-300 overflow-hidden">
+        <div className="flex rounded-lg border border-gray-300 overflow-hidden w-[20.4rem] lg:w-72">
           <span className="bg-gray-100 px-3 flex items-center text-gray-700 text-sm">
             Rp.
           </span>
@@ -262,7 +266,7 @@ export default function FormBooking() {
             type="text"
             value={`${totalCost.toLocaleString()}`}
             readOnly
-            className="w-full rounded-lg p-2 bg-white"
+            className="rounded-lg p-2 bg-white"
           />
         </div>
       </div>
